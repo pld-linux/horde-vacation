@@ -3,6 +3,7 @@
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
+Summary(pl):	vacation - modu³ zarz±dzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
 Version:	2.2.2
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
@@ -33,7 +34,25 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_appdir		%{hordedir}/%{_hordeapp}
 
 %description
-Vacation is a Horde module for managing user e-mail "vacation notices" or "auto-responders." It works via a local vacation program which must be installed and functioning on the server. It supports vacation programs using the .forward-style forwarding mechanism supported by several popular mailers, as well as qmail and sql based implementations. While it has been released and is in production use at many sites, it is also under heavy development in an effort to expand and improve the module.
+Vacation is a Horde module for managing user e-mail "vacation notices"
+or "auto-responders." It works via a local vacation program which must
+be installed and functioning on the server. It supports vacation
+programs using the .forward-style forwarding mechanism supported by
+several popular mailers, as well as qmail and SQL based
+implementations. While it has been released and is in production use
+at many sites, it is also under heavy development in an effort to
+expand and improve the module.
+
+%description -l pl
+Vacation to modu³ Horde do zarz±dzania pocztowymi "powiadomieniami o
+wakacjach" czy te¿ "autoresponderami" u¿ytkowników. Dzia³a poprzez
+lokalny program vacation, który musi byæ zainstalowany i dzia³aj±cy na
+serwerze. Obs³uguje programy vacation u¿ywaj±ce mechanizmu
+przekazywania typu .forward obs³ugiwanego przez kilka popularnych
+programów pocztowych, a tak¿e implementacje oparte na qmailu i SQL-u.
+Choæ modu³ zosta³ wydany i jest u¿ywany produkcyjnie na wielu
+serwerach, jest nadal intensywnie rozwijany w celu rozszerzenia i
+ulepszenia modu³u.
 
 %prep
 %setup -q -c -T -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
