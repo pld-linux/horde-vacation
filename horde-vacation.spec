@@ -1,5 +1,5 @@
 %define		_hordeapp	vacation
-%define		_rel	0.1
+%define		_rel	0.2
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
@@ -22,6 +22,8 @@ Requires:	apache(mod_access)
 Requires:	horde >= 3.0
 Requires:	php-xml >= 4.1.0
 Requires:	vacation
+Requires:	webapps
+Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -30,8 +32,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	'pear(Horde.*)'
 
 %define		hordedir	/usr/share/horde
-%define		_sysconfdir	/etc/horde.org
 %define		_appdir		%{hordedir}/%{_hordeapp}
+%define		_webapps	/etc/webapps
+%define		_webapp		horde-%{_hordeapp}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 Vacation is a Horde module for managing user e-mail "vacation notices"
@@ -64,54 +68,81 @@ rm -f test.php
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp} \
+install -d $RPM_BUILD_ROOT%{_sysconfdir} \
 	$RPM_BUILD_ROOT%{_appdir}/{docs,graphics,lib,locale,scripts,templates}
 
 cp -pR	*.php			$RPM_BUILD_ROOT%{_appdir}
 for i in config/*.dist; do
-	cp -p $i $RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/$(basename $i .dist)
+	cp -p $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i .dist)
 done
-echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/conf.php
-touch	$RPM_BUILD_ROOT%{_sysconfdir}/%{_hordeapp}/conf.php.bak
+echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/conf.php
+touch	$RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
 
 cp -pR	graphics/*		$RPM_BUILD_ROOT%{_appdir}/graphics
 cp -pR	lib/*			$RPM_BUILD_ROOT%{_appdir}/lib
 cp -pR	locale/*		$RPM_BUILD_ROOT%{_appdir}/locale
 cp -pR	templates/*		$RPM_BUILD_ROOT%{_appdir}/templates
 
-ln -s %{_sysconfdir}/%{_hordeapp} 	$RPM_BUILD_ROOT%{_appdir}/config
+ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
 ln -s %{_docdir}/%{name}-%{version}/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{_hordeapp}.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webapps}/%{_webapp}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ ! -f %{_sysconfdir}/%{_hordeapp}/conf.php.bak ]; then
-	install /dev/null -o root -g http -m660 %{_sysconfdir}/%{_hordeapp}/conf.php.bak
+if [ ! -f %{_sysconfdir}/conf.php.bak ]; then
+	install /dev/null -o root -g http -m660 %{_sysconfdir}/conf.php.bak
 fi
 
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{_hordeapp}.conf
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
 
-%triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{_hordeapp}.conf
+%triggerin -- apache < 2.2.0, apache-base
+%webapp_register httpd %{_webapp}
 
-%triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%triggerun -- apache < 2.2.0, apache-base
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -- horde-%{_hordeapp} < 2.2.2-0.2, %{_hordeapp}
+for i in conf.php longIntro.txt mime_drivers.php prefs.php sourceroots.php; do
+	if [ -f /etc/horde.org/%{_hordeapp}/$i.rpmsave ]; then
+		mv -f %{_sysconfdir}/$i{,.rpmnew}
+		mv -f /etc/horde.org/%{_hordeapp}/$i.rpmsave %{_sysconfdir}/$i
+	fi
+done
+
+if [ -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave ]; then
+	mv -f %{_sysconfdir}/apache.conf{,.rpmnew}
+	mv -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+	cp -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave %{_sysconfdir}/apache.conf
+	cp -f /etc/horde.org/apache-%{_hordeapp}.conf.rpmsave %{_sysconfdir}/httpd.conf
+fi
+
+if [ -L /etc/apache/conf.d/99_horde-%{_hordeapp}.conf ]; then
+	/usr/sbin/webapp register apache %{_webapp}
+	rm -f /etc/apache/conf.d/99_horde-%{_hordeapp}.conf
+	%service -q apache reload
+fi
+if [ -L /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf ]; then
+	/usr/sbin/webapp register httpd %{_webapp}
+	rm -f /etc/httpd/httpd.conf/99_horde-%{_hordeapp}.conf
+	%service -q httpd reload
+fi
 
 %files
 %defattr(644,root,root,755)
 %doc README docs/* scripts
-%attr(750,root,http) %dir %{_sysconfdir}/%{_hordeapp}
-%attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache-%{_hordeapp}.conf
-%attr(660,root,http) %config(noreplace) %{_sysconfdir}/%{_hordeapp}/conf.php
-%attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/%{_hordeapp}/conf.php.bak
-##%attr(640,root,http) %config(noreplace) %{_sysconfdir}/%{_hordeapp}/[!c]*.php
+%attr(750,root,http) %dir %{_sysconfdir}
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %{_sysconfdir}/httpd.conf
+%attr(660,root,http) %config(noreplace) %{_sysconfdir}/conf.php
+%attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/conf.php.bak
 
 %dir %{_appdir}
 %{_appdir}/*.php
