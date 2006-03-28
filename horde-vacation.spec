@@ -1,17 +1,18 @@
 %define		_hordeapp	vacation
-%define		_rel	0.2
+%define		_rc	rc1
+%define		_rel	1
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
 Summary(pl):	vacation - modu³ zarz±dzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
-Version:	2.2.2
+Version:	3.0
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:0.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	ASL
 Group:		Applications/WWW
 #Source0:	ftp://ftp.horde.org/pub/snaps/%{_snap}/%{_hordeapp}-HEAD-%{_snap}.tar.gz
-Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-%{version}.tar.gz
-# Source0-md5:	1345ff8e30a98de7085f01f0abde3007
+Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
+# Source0-md5:	71c36a46f0463ba7c128a2103a4ec6ae
 Source1:	%{name}.conf
 URL:		http://www.horde.org/vacation/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
@@ -59,23 +60,20 @@ ulepszenia modu³u.
 %setup -q -c -T -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
 tar zxf %{SOURCE0} --strip-components=1
 
-rm -f scripts/.htaccess
+rm -f {,*/}.htaccess
 # considered harmful (horde/docs/SECURITY)
 rm -f test.php
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir} \
-	$RPM_BUILD_ROOT%{_appdir}/{docs,graphics,lib,locale,scripts,templates}
+	$RPM_BUILD_ROOT%{_appdir}/{docs,lib,locale,scripts,templates}
 
 cp -pR	*.php			$RPM_BUILD_ROOT%{_appdir}
-for i in config/*.dist; do
-	cp -p $i $RPM_BUILD_ROOT%{_sysconfdir}/$(basename $i .dist)
-done
+
 echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/conf.php
 touch	$RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
 
-cp -pR	graphics/*		$RPM_BUILD_ROOT%{_appdir}/graphics
 cp -pR	lib/*			$RPM_BUILD_ROOT%{_appdir}/lib
 cp -pR	locale/*		$RPM_BUILD_ROOT%{_appdir}/locale
 cp -pR	templates/*		$RPM_BUILD_ROOT%{_appdir}/templates
@@ -145,7 +143,6 @@ fi
 %{_appdir}/*.php
 %{_appdir}/config
 %{_appdir}/docs
-%{_appdir}/graphics
 %{_appdir}/lib
 %{_appdir}/locale
 %{_appdir}/templates
