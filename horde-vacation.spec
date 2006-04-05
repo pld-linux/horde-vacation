@@ -1,6 +1,6 @@
 %define		_hordeapp	vacation
 %define		_rc	rc1
-%define		_rel	1
+%define		_rel	2
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
@@ -138,6 +138,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 %attr(660,root,http) %config(noreplace) %{_sysconfdir}/conf.php
 %attr(660,root,http) %config(noreplace) %ghost %{_sysconfdir}/conf.php.bak
+%attr(640,root,http) %{_sysconfdir}/conf.xml
 
 %dir %{_appdir}
 %{_appdir}/*.php
