@@ -1,0 +1,11 @@
+--- vacation-3.0-rc1/config/conf.xml~	2005-10-25 14:41:57.000000000 +0300
++++ vacation-3.0-rc1/config/conf.xml	2006-04-05 23:36:30.519804001 +0300
+@@ -4,7 +4,7 @@
+  <configsection name="vacation">
+   <configheader>Vacation Settings</configheader>
+   <configstring name="path" desc="Location of the vacation program">
+-   /usr/local/bin/vacation
++   /usr/bin/vacation
+   </configstring>
+   <configstring name="validation_pattern" required="false" desc="You can restrict vacation messages to match a certain pattern, if you like. If this config value is non-empty, it is expected to be a PCRE regular expression. Include the pattern delimiters, and any modifiers that you want applied. See: http://www.php.net/manual/en/pcre.pattern.syntax.php. Example: |^Subject: .+\n.+|"/>
+   <configphp name="default" required="false" desc="The default vacation message">
