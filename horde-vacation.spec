@@ -1,6 +1,6 @@
 %define		_hordeapp	vacation
-%define		_rc	rc1
-%define		_rel	2
+%define		_rc		rc1
+%define		_rel	3
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
@@ -14,12 +14,14 @@ Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
 # Source0-md5:	71c36a46f0463ba7c128a2103a4ec6ae
 Source1:	%{name}.conf
+Patch0:		horde-vacation-conf.patch
 URL:		http://www.horde.org/vacation/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.226
 BuildRequires:	tar >= 1:1.15.1
+Requires(post):	sed >= 4.0
 Requires:	horde >= 3.0
-Requires:	php-xml >= 4.1.0
+Requires:	php-xml >= 3:4.1.0
 Requires:	vacation
 Requires:	webapps
 BuildArch:	noarch
@@ -59,28 +61,22 @@ ulepszenia modu³u.
 %prep
 %setup -q -c -T -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
 tar zxf %{SOURCE0} --strip-components=1
+%patch0 -p1
 
-rm -f {,*/}.htaccess
-# considered harmful (horde/docs/SECURITY)
-rm -f test.php
+rm */.htaccess
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir} \
-	$RPM_BUILD_ROOT%{_appdir}/{docs,lib,locale,scripts,templates}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/docs}
 
-cp -pR	*.php			$RPM_BUILD_ROOT%{_appdir}
-
+cp -a *.php $RPM_BUILD_ROOT%{_appdir}
+cp -a config/* $RPM_BUILD_ROOT%{_sysconfdir}
 echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/conf.php
-touch	$RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
-
-cp -pR	lib/*			$RPM_BUILD_ROOT%{_appdir}/lib
-cp -pR	locale/*		$RPM_BUILD_ROOT%{_appdir}/locale
-cp -pR	templates/*		$RPM_BUILD_ROOT%{_appdir}/templates
+touch $RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
+cp -a lib locale templates themes $RPM_BUILD_ROOT%{_appdir}
 
 ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
 ln -s %{_docdir}/%{name}-%{version}/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
-
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
@@ -90,6 +86,15 @@ rm -rf $RPM_BUILD_ROOT
 %post
 if [ ! -f %{_sysconfdir}/conf.php.bak ]; then
 	install /dev/null -o root -g http -m660 %{_sysconfdir}/conf.php.bak
+fi
+
+# take uids with < 500 and update refused logins in default conf.xml
+USERLIST=$(awk -F: '{ if ($3 < 500) print $1 }' < /etc/passwd | xargs | tr ' ' ',')
+if [ "$USERLIST" ]; then
+	sed -i -e "
+	# primitive xml parser ;)
+	/configlist name=\"refused\"/s/>.*</>$USERLIST</
+	" %{_sysconfdir}/conf.xml
 fi
 
 %triggerin -- apache1
@@ -147,3 +152,4 @@ fi
 %{_appdir}/lib
 %{_appdir}/locale
 %{_appdir}/templates
+%{_appdir}/themes
