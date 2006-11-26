@@ -1,7 +1,7 @@
 %define		_hordeapp	vacation
 #define		_snap	2006-07-19
 #define		_rc		rc1
-%define		_rel	2
+%define		_rel	3
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
@@ -23,7 +23,8 @@ BuildRequires:	rpmbuild(macros) >= 1.226
 BuildRequires:	tar >= 1:1.15.1
 Requires(post):	sed >= 4.0
 Requires:	horde >= 3.0
-Requires:	php-xml >= 3:4.1.0
+Requires:	php(xml)
+Requires:	php-common >= 3:4.1.0
 Requires:	vacation
 Requires:	webapps
 BuildArch:	noarch
