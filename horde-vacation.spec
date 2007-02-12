@@ -5,7 +5,7 @@
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
-Summary(pl):	vacation - modu≥ zarz±dzania wakacjami dla Horde
+Summary(pl.UTF-8):   vacation - modu≈Ç zarzƒÖdzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
 Version:	3.0
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:1.%(echo %{_snap} | tr -d -).}%{_rel}
@@ -50,16 +50,16 @@ implementations. While it has been released and is in production use
 at many sites, it is also under heavy development in an effort to
 expand and improve the module.
 
-%description -l pl
-Vacation to modu≥ Horde do zarz±dzania pocztowymi "powiadomieniami o
-wakacjach" czy teø "autoresponderami" uøytkownikÛw. Dzia≥a poprzez
-lokalny program vacation, ktÛry musi byÊ zainstalowany i dzia≥aj±cy na
-serwerze. Obs≥uguje programy vacation uøywaj±ce mechanizmu
-przekazywania typu .forward obs≥ugiwanego przez kilka popularnych
-programÛw pocztowych, a takøe implementacje oparte na qmailu i SQL-u.
-ChoÊ modu≥ zosta≥ wydany i jest uøywany produkcyjnie na wielu
+%description -l pl.UTF-8
+Vacation to modu≈Ç Horde do zarzƒÖdzania pocztowymi "powiadomieniami o
+wakacjach" czy te≈º "autoresponderami" u≈ºytkownik√≥w. Dzia≈Ça poprzez
+lokalny program vacation, kt√≥ry musi byƒá zainstalowany i dzia≈ÇajƒÖcy na
+serwerze. Obs≈Çuguje programy vacation u≈ºywajƒÖce mechanizmu
+przekazywania typu .forward obs≈Çugiwanego przez kilka popularnych
+program√≥w pocztowych, a tak≈ºe implementacje oparte na qmailu i SQL-u.
+Choƒá modu≈Ç zosta≈Ç wydany i jest u≈ºywany produkcyjnie na wielu
 serwerach, jest nadal intensywnie rozwijany w celu rozszerzenia i
-ulepszenia modu≥u.
+ulepszenia modu≈Çu.
 
 %prep
 %setup -q -c -T -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
