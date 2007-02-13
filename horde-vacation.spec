@@ -5,7 +5,7 @@
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
-Summary(pl.UTF-8):   vacation - moduł zarządzania wakacjami dla Horde
+Summary(pl.UTF-8):	vacation - moduł zarządzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
 Version:	3.0
 Release:	%{?_rc:0.%{_rc}.}%{?_snap:1.%(echo %{_snap} | tr -d -).}%{_rel}
