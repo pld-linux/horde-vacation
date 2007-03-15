@@ -1,6 +1,6 @@
 %define		_hordeapp	vacation
 #define		_snap	2006-07-19
-%define		_rc		rc1
+#define		_rc		rc1
 %define		_rel	1
 #
 %include	/usr/lib/rpm/macros.php
@@ -12,9 +12,9 @@ Release:	%{?_rc:0.%{_rc}.}%{?_snap:1.%(echo %{_snap} | tr -d -).}%{_rel}
 License:	ASL
 Group:		Applications/WWW
 #Source0:	http://ftp.horde.org/pub/snaps/%{_snap}/%{_hordeapp}-HEAD-%{_snap}.tar.gz
-#Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}.tar.gz
-Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
-# Source0-md5:	987faeb4b73f34b08c07c9454e4d553c
+Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}.tar.gz
+# Source0-md5:	3076da56811855c58a39b929219ea13a
+#Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
 Source1:	%{name}.conf
 Patch0:		horde-vacation-conf.patch
 URL:		http://www.horde.org/vacation/
