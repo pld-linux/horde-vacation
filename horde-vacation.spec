@@ -55,7 +55,7 @@ serwerach, jest nadal intensywnie rozwijany w celu rozszerzenia i
 ulepszenia modułu.
 
 %prep
-%setup -q
+%setup -q -n %{_hordeapp}-h3-%{version}
 %patch0 -p1
 
 find . '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
