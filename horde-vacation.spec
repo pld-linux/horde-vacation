@@ -1,20 +1,15 @@
 %define		_hordeapp	vacation
-#define		_snap	2006-07-19
-#define		_rc		rc1
-%define		_rel	2
 #
 %include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
 Summary(pl.UTF-8):	vacation - moduł zarządzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
 Version:	3.0.1
-Release:	%{?_rc:0.%{_rc}.}%{?_snap:1.%(echo %{_snap} | tr -d -).}%{_rel}
+Release:	2
 License:	ASL
 Group:		Applications/WWW
-#Source0:	http://ftp.horde.org/pub/snaps/%{_snap}/%{_hordeapp}-HEAD-%{_snap}.tar.gz
 Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}.tar.gz
 # Source0-md5:	3076da56811855c58a39b929219ea13a
-#Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}-%{_rc}.tar.gz
 Source1:	%{name}.conf
 Patch0:		horde-vacation-conf.patch
 URL:		http://www.horde.org/vacation/
@@ -62,8 +57,7 @@ serwerach, jest nadal intensywnie rozwijany w celu rozszerzenia i
 ulepszenia modułu.
 
 %prep
-%setup -q -c -T -n %{?_snap:%{_hordeapp}-%{_snap}}%{!?_snap:%{_hordeapp}-%{version}%{?_rc:-%{_rc}}}
-tar zxf %{SOURCE0} --strip-components=1
+%setup -q
 %patch0 -p1
 
 find . '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
