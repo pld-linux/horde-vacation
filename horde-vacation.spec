@@ -25,8 +25,6 @@ Requires:	webapps
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# horde accesses it directly in help->about
-%define		_noautocompressdoc  CREDITS
 %define		_noautoreq	'pear(Horde.*)'
 
 %define		hordedir	/usr/share/horde
@@ -73,9 +71,9 @@ cp -a config/* $RPM_BUILD_ROOT%{_sysconfdir}
 echo '<?php ?>' > $RPM_BUILD_ROOT%{_sysconfdir}/conf.php
 touch $RPM_BUILD_ROOT%{_sysconfdir}/conf.php.bak
 cp -a lib locale templates themes $RPM_BUILD_ROOT%{_appdir}
+cp -a docs/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
 
 ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
-ln -s %{_docdir}/%{name}-%{version}/CREDITS $RPM_BUILD_ROOT%{_appdir}/docs
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
