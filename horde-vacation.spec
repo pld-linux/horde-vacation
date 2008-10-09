@@ -15,7 +15,6 @@ Patch0:		horde-vacation-conf.patch
 URL:		http://www.horde.org/vacation/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.226
-BuildRequires:	tar >= 1:1.15.1
 Requires(post):	sed >= 4.0
 Requires:	horde >= 3.0
 Requires:	php(xml)
