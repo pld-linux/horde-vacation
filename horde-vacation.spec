@@ -1,6 +1,5 @@
 %define		_hordeapp	vacation
 #
-%include	/usr/lib/rpm/macros.php
 Summary:	vacation - vacation manager module for Horde
 Summary(pl.UTF-8):	vacation - moduł zarządzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
