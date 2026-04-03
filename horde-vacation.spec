@@ -4,7 +4,7 @@ Summary:	vacation - vacation manager module for Horde
 Summary(pl.UTF-8):	vacation - moduł zarządzania wakacjami dla Horde
 Name:		horde-%{_hordeapp}
 Version:	3.2.1
-Release:	4
+Release:	5
 License:	ASL
 Group:		Applications/WWW
 Source0:	ftp://ftp.horde.org/pub/vacation/%{_hordeapp}-h3-%{version}.tar.gz
